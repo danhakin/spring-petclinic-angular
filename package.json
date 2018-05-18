@@ -9,7 +9,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "funcTest": "mocha test/web_tests test/api_tests"
+    "funcTest": "mocha test/web_tests test/api_tests",
+    "apiTest": "mocha test/api_tests",
+    "webTest": "mocha test/web_tests"
   },
   "private": true,
   "dependencies": {
