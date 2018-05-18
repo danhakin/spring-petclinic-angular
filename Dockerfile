@@ -12,4 +12,4 @@ EXPOSE 4200
 
 #CMD [ "./node_modules/@angular/cli/bin/ng", "serve" ]
 
-CMD [ "npm", "start" ]
+#CMD [ "npm", "start" ]
