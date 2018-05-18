@@ -1,14 +1,14 @@
-FROM node:9-alpine
+FROM node
 
 RUN npm install -g @angular/cli@latest
 
-RUN mkdir -p /var/app/spring-petclient-front
-WORKDIR /var/app/spring-petclient-front
+RUN mkdir -p /usr/src/spring-petclient-front
+WORKDIR /usr/src/spring-petclient-front
 
-COPY package.json /var/app/spring-petclient-front
+COPY package.json /usr/src/spring-petclient-front
 RUN npm install
 
-COPY . /var/app/spring-petclient-front
+COPY . /usr/src/spring-petclient-front
 
 EXPOSE 4200
 
