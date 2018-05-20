@@ -1,20 +1,11 @@
-FROM node
+FROM nginx
 
-RUN npm install -g @angular/cli@latest
+COPY petclinic.conf /etc/nginx/conf.d/default.conf
 
-RUN mkdir -p /usr/src/spring-petclient-front
-WORKDIR /usr/src/spring-petclient-front
+RUN mkdir -p /usr/share/nginx/html/petclinic
 
-COPY package.json /usr/src/spring-petclient-front
-#RUN npm install --save-dev @angular/cli@latest && rm package-lock.json
-RUN npm install
+COPY ./dist /usr/share/nginx/html/petclinic/dist
 
-COPY . /usr/src/spring-petclient-front
+EXPOSE 80
 
-EXPOSE 4200
-
-RUN pwd & ls -la
-
-#CMD [ "./node_modules/@angular/cli/bin/ng", "serve" ]
-
-CMD [ "npm", "start" ]
+CMD ["nginx", "-g", "daemon off;"]
