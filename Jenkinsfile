@@ -1,39 +1,62 @@
 pipeline {
     agent any
+    environment {
+        CI = 'true'
+    }
+    tools {
+        nodejs 'nodejs'
+    }
     stages {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/danhakin/spring-petclinic-angular.git', credentialsId: 'github-danhakin', branch: 'master'            
             }
         }
-        stage('Build image') {
+        stage('Build') {
             steps {
-                script {
-                    app = docker.build("spring-petclinic-front:${env.BUILD_ID}")
+                sh 'npm install'
+                sh 'npm run build'
+            }
+        }
+        stage('Unit testing') {
+            steps {
+                sh 'npm run test-ci'
+            }
+            post {
+               always {
+                    junit 'TESTS-*.xml'
                 }
             }
         }
-        stage('Unit Testing') {
+        stage('API Testing') {
             steps {
                 script {
-                    app.inside {
-                        sh "npm install"
+                    docker.withRegistry("https://935517557789.dkr.ecr.eu-west-1.amazonaws.com/spring-petclinic-rest","ecr:eu-west-1:aws-ecr-repo"){
+                        docker.image('spring-petclinic-rest:22').withRun('-p 9966:9966') { c -> 
+                            sh 'while ! curl localhost:9966; do sleep 1; done'
+                            sh 'npm run apiTest'    
+                        }
                     }
                 }
             }
         }
-        stage('API Testing')
+        stage('Push image') {
             steps {
+                sh 'echo Uploading docker image to ECR'
+                sh 'npm run dist'
                 script {
-                    app.inside {
-                        sh "npm run apiTest"
-                    }
+                  app = docker.build("spring-petclinic-front:${env.BUILD_ID}")
+                    docker.withRegistry("https://935517557789.dkr.ecr.eu-west-1.amazonaws.com/spring-petclinic-front","ecr:eu-west-1:aws-ecr-repo"){
+                        app.push()
+                    }  
                 }
             }
         }
         stage('Deliver') {
-            steps{
-                sh 'echo delivering coming soon...'
+            steps {
+                sh 'echo Deploying to ECS Cluster'
+                sh 'ls -la'
+                sh './deploy.sh'
             }
         }
     }
