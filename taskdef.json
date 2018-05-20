@@ -1,10 +1,10 @@
 {
-    "family": "spring-petclinic",
+    "family": "petclinic",
     "networkMode": "bridge",
     "containerDefinitions": [
         {
             "image": "%REPOSITORY_URI%:%BUILD_NUMBER%",
-            "name": "spring-petclinic-front",
+            "name": "petclinic-front",
             "cpu": 128,
             "memory": 256,
             "essential": true,

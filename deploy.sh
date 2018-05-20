@@ -9,7 +9,7 @@ REGION=eu-west-1
 REPOSITORY_NAME=spring-petclinic-front
 CLUSTER=ecs-devops
 FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
-NAME=`sed -n 's/.*"name": "\(spring.*\)",/\1/p' taskdef.json`
+NAME=`sed -n 's/.*"name": "\(pet.*\)",/\1/p' taskdef.json`
 SERVICE_NAME=${NAME}-service
 
 # Get API latest tag in ECR
