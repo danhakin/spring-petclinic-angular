@@ -13,7 +13,7 @@ COPY . /usr/src/spring-petclient-front
 
 EXPOSE 4200
 
-RUN cmd & ls -la
+RUN pwd & ls -la
 
 #CMD [ "./node_modules/@angular/cli/bin/ng", "serve" ]
 
