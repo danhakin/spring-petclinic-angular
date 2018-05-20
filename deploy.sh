@@ -6,6 +6,7 @@ ${DOCKER_LOGIN}
 
 # Get API latest tag in ECR
 API_TAG=`aws ecr describe-images --repository-name spring-petclinic-rest --output text --query 'sort_by(imageDetails,& imagePushedAt)[*].imageTags[*]' | tr '\t' '\n' | tail -1`
+echo ${API_TAG}
 
 # Prepare ECS Service
 REGION=eu-west-1
@@ -22,7 +23,7 @@ REPOSITORY_URI=`aws ecr describe-repositories --repository-names ${REPOSITORY_NA
 
 echo "-- Replace the build number and respository URI placeholders with the constants above"
 #Replace the build number and respository URI placeholders with the constants above
-sed -e "s;%BUILD_NUMBER%;${BUILD_NUMBER};g" -e "s;%REPOSITORY_URI%;${REPOSITORY_URI};g" taskdef.json > ${NAME}-${BUILD_NUMBER}.json
+sed -e "s;%BUILD_NUMBER%;${BUILD_NUMBER};g" -e "s;%REPOSITORY_URI%;${REPOSITORY_URI};g" -e "s;%API_TAG%;${API_TAG};g" taskdef.json > ${NAME}-${BUILD_NUMBER}.json
 
 echo "-- Register the task definition in the repository"
 #Register the task definition in the repository
