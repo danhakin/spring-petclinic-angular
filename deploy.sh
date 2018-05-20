@@ -4,18 +4,17 @@
 DOCKER_LOGIN=`aws ecr get-login --region eu-west-1 --no-include-email`
 ${DOCKER_LOGIN}
 
-# Get API latest tag in ECR
-API_TAG=`aws ecr describe-images --repository-name spring-petclinic-rest --output text --query 'sort_by(imageDetails,& imagePushedAt)[*].imageTags[*]' | tr '\t' '\n' | tail -1`
-echo ${API_TAG}
-
 # Prepare ECS Service
 REGION=eu-west-1
 REPOSITORY_NAME=spring-petclinic-front
 CLUSTER=ecs-devops
 FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
-NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
-NAME=`echo ${NAME} | awk '{print $1}'`
+NAME=`sed -n 's/.*"name": "\(spring.*\)",/\1/p' taskdef.json`
 SERVICE_NAME=${NAME}-svc
+
+# Get API latest tag in ECR
+API_TAG=`aws ecr describe-images --repository-name spring-petclinic-rest --region ${REGION} --output text --query 'sort_by(imageDetails,& imagePushedAt)[*].imageTags[*]' | tr '\t' '\n' | tail -1`
+echo "API version: ${API_TAG}"
 
 echo "-- Store the repositoryUri as a variable"
 #Store the repositoryUri as a variable
