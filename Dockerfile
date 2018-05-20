@@ -6,7 +6,7 @@ RUN mkdir -p /usr/src/spring-petclient-front
 WORKDIR /usr/src/spring-petclient-front
 
 COPY package.json /usr/src/spring-petclient-front
-RUN npm install --save-dev @angular/cli@latest && rm package-lock.json
+#RUN npm install --save-dev @angular/cli@latest && rm package-lock.json
 RUN npm install
 
 COPY . /usr/src/spring-petclient-front
