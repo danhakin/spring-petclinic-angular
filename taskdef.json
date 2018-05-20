@@ -1,0 +1,41 @@
+{
+    "family": "spring-petclinic",
+    "networkMode": "bridge",
+    "containerDefinitions": [
+        {
+            "image": "%REPOSITORY_URI%:%BUILD_NUMBER%",
+            "name": "spring-petclinic-front",
+            "cpu": 128,
+            "memory": 256,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [{
+                "name": "PETCLINIC_API_ENDPOINT",
+                "value": "http://api:9966"
+            }],
+            "links": [
+                "api:api"
+            ]
+        },
+        {
+            "name": "api",
+            "image": "935517557789.dkr.ecr.eu-west-1.amazonaws.com/spring-petclinic-rest:latest",
+            "cpu": 256,
+            "memory": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 9966,
+                    "hostPort": 9966,
+                    "protocol": "tcp"
+                }
+            ]
+        }
+    ]
+}
