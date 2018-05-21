@@ -31,7 +31,7 @@ SERVICES=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUST
 
 echo "-- Get latest revision"
 #Get latest revision
-REVISION=`aws ecs describe-task-definition --task-definition ${NAME} --region ${REGION} | jq .taskDefinition.revision`
+REVISION=`aws ecs describe-task-definition --task-definition ${FAMILY} --region ${REGION} | jq .taskDefinition.revision`
 
 echo "-- Create or update service"
 #Create or update service
