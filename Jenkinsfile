@@ -18,16 +18,6 @@ pipeline {
                 sh 'npm run build'
             }
         }
-        stage('Unit testing') {
-            steps {
-                sh 'npm run test-ci'
-            }
-            post {
-               always {
-                    junit 'TESTS-*.xml'
-                }
-            }
-        }
         stage('API Testing') {
             steps {
                 script {
@@ -42,6 +32,16 @@ pipeline {
             post {
                always {
                     junit 'api-report.xml'
+                }
+            }
+        }
+        stage('Functional Testing') {
+            steps {
+                sh 'npm run test-ci'
+            }
+            post {
+               always {
+                    junit 'TESTS-*.xml'
                 }
             }
         }
