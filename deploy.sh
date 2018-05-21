@@ -10,7 +10,13 @@ REPOSITORY_NAME=spring-petclinic-front
 CLUSTER=ecs-devops
 FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
 NAME=`sed -n 's/.*"name": "\(pet.*\)",/\1/p' taskdef.json`
-SERVICE_NAME=${FAMILY}-app-svc
+SERVICE_NAME=${FAMILY}-app
+
+# Include load balancer info
+TARGET_GROUP=arn:aws:elasticloadbalancing:eu-west-1:935517557789:targetgroup/petclinic/e8e75155cfd1f319
+LOAD_BALANCER=petclinic-lb
+CONTAINER_NAME=${NAME}
+CONTAINER_PORT=80
 
 # Get API latest tag in ECR
 API_TAG=`aws ecr describe-images --repository-name spring-petclinic-rest --region ${REGION} --output text --query 'sort_by(imageDetails,& imagePushedAt)[*].imageTags[*]' | tr '\t' '\n' | tail -1`
@@ -44,5 +50,12 @@ if [ "$SERVICES" == "" ]; then
   aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
 else
   echo "entered new service"
-  aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
+  #aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
+  aws ecs create-service \
+    --service-name ${SERVICE_NAME} \
+    --desired-count 1 \
+    --task-definition ${FAMILY} \
+    --cluster ${CLUSTER} \
+    --region ${REGION} \
+    --load-balancers "targetGroupArn=${TARGET_GROUP},containerName=${CONTAINER_NAME},containerPort=${CONTAINER_PORT}"
 fi
