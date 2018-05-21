@@ -39,6 +39,11 @@ pipeline {
                     }
                 }
             }
+            post {
+               always {
+                    junit 'api-report.xml'
+                }
+            }
         }
         stage('Push image') {
             steps {

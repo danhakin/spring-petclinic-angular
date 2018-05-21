@@ -12,7 +12,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "funcTest": "mocha test/web_tests test/api_tests",
-    "apiTest": "mocha test/api_tests",
+    "apiTest": "JUNIT_REPORT_PATH=api-report.xml mocha test/api_tests --reporter mocha-jenkins-reporter",
     "webTest": "mocha test/web_tests"
   },
   "private": true,
@@ -69,7 +69,8 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "mocha": "3.5.3",
-    "mochawesome": "^1.2.1",
+    "mocha-jenkins-reporter": "^0.3.12",
+    "mochawesome": "^1.5.5",
     "mongodb": "^2.1.11",
     "protractor": "~5.1.2",
     "q": "^1.4.1",
